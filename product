@@ -1,0 +1,53 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public abstract class Product { //1. make class Product abstract
+    private int id = 0;
+    private String title;
+    private int price;
+    private Map<String, String> attributes = new HashMap<>(); //1. make new field with HashMap
+
+    public Product() {
+        incrementId(); //3. call a method to add an ID
+    }
+
+    public Product(int id, String title, int price, Map<String, String> attributes) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+        this.attributes = attributes;
+        incrementId(); //3. call a method to add an ID
+    }
+
+    // 3. make a method to count ID++
+    private void incrementId() {
+        this.id++;
+    }
+
+    public abstract void calculatePrice(int quantity, int price); //2. new abstract method to calculate price
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public int getPrice() { return price; }
+    public void setPrice(int price) { this.price = price; }
+
+    public Map<String, String> getAttributes() { return attributes; }
+    public void setAttributes(Map<String, String> attributes) { this.attributes = attributes; }
+}
+
+class PhysicalProduct extends Product {
+
+    public PhysicalProduct(int id, String title, int price, Map<String, String> attributes) {
+        super(id, title, price, attributes);
+    }
+
+    @Override
+    public void calculatePrice(int quantity, int price) {
+        int total = quantity * price;
+        System.out.println("Total price for " + getTitle() + ": " + total);
+    }
+}
