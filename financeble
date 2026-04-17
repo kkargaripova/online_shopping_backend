@@ -1,0 +1,8 @@
+public interface financable {
+    double checkBalance();
+
+    boolean hasEnoughMoney(double money);
+
+    String getFinancialStatus();
+}
+
