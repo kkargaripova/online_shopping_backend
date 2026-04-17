@@ -1,14 +1,15 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public abstract class Product { //1. make class Product abstract
-    private int id = 0;
+public abstract class Product {
+    private int id;
     private String title;
     private int price;
-    private Map<String, String> attributes = new HashMap<>(); //1. make new field with HashMap
+    private Map<String, String> attributes = new HashMap<>();
 
     public Product() {
-        incrementId(); //3. call a method to add an ID
+        incrementId();
     }
 
     public Product(int id, String title, int price, Map<String, String> attributes) {
@@ -16,17 +17,30 @@ public abstract class Product { //1. make class Product abstract
         this.title = title;
         this.price = price;
         this.attributes = attributes;
-        incrementId(); //3. call a method to add an ID
     }
 
-    // 3. make a method to count ID++
     private void incrementId() {
         this.id++;
     }
 
-    public abstract void calculatePrice(int quantity, int price); //2. new abstract method to calculate price
+    public abstract void calculatePrice(int quantity, int price);
 
-    public int getId() { return id; }
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true; //проверка ссылаются ли на один объект
+
+        if (!(o instanceof Product product)) return false; //проверка на ноль
+
+        return id == product.id; //сравнение id
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public String getId() { return String.valueOf(id); }
     public void setId(int id) { this.id = id; }
 
     public String getTitle() { return title; }
@@ -39,15 +53,49 @@ public abstract class Product { //1. make class Product abstract
     public void setAttributes(Map<String, String> attributes) { this.attributes = attributes; }
 }
 
-class PhysicalProduct extends Product {
+
+class PhysicalProduct extends Product implements payable, financable {
+    private boolean isPaidStatus = false;
+    private double currentBalance = 150000.0;
 
     public PhysicalProduct(int id, String title, int price, Map<String, String> attributes) {
         super(id, title, price, attributes);
     }
 
     @Override
+    public double getFinalPrice() { return (double) getPrice(); }
+
+    @Override
+    public void pay(double amount) {
+        if (hasEnoughMoney(amount)) {
+            isPaidStatus = true;
+            currentBalance -= amount;
+            System.out.println("Успешная оплата: " + getTitle());
+        } else {
+            System.out.println("Ошибка: недостаточно средств для " + getTitle());
+        }
+    }
+
+    @Override
+    public boolean isPaid() { return isPaidStatus; }
+
+    @Override
+    public double checkBalance() { return currentBalance; }
+
+    @Override
+    public boolean hasEnoughMoney(double money) { return currentBalance >= money; }
+
+    @Override
+    public String getFinancialStatus() {
+        if (isPaidStatus) {
+            return "Товар: '" + getTitle() + "' оплачен.";
+        } else {
+            return "Товар '" + getTitle() + "' ожидает оплаты. Требуется: " + getFinalPrice();
+        }
+    }
+
+    @Override
     public void calculatePrice(int quantity, int price) {
-        int total = quantity * price;
-        System.out.println("Total price for " + getTitle() + ": " + total);
+        System.out.println("Расчет: " + (quantity * price));
     }
 }
