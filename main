@@ -14,6 +14,23 @@ public class Main {
         PhysicalProduct phoneClone = new PhysicalProduct(3, "Iphone 17", 100000, attributes1);
         PhysicalProduct phoneOther = new PhysicalProduct(4, "Iphone 16", 70000, attributes1);
 
+        Client customer = new Client("Иван", 25, 150000.0);
+
+        System.out.println("Демонстрация работы с клиентом: ");
+        System.out.println(customer.getFinancialStatus());
+
+        double productPrice = phone17.getFinalPrice();
+
+        if (customer.hasEnoughMoney(productPrice)) {
+            customer.spend(productPrice);
+            phone17.pay(productPrice);
+            System.out.println("Поздравляю с покупкой!");
+        } else {
+            System.out.println("Недостаточно средств.");
+        }
+
+        System.out.println("Остаток на балансе клиента: " + customer.checkBalance());
+
         catalog.put(phone17, phone17.getPrice());
         catalog.put(headphones1, headphones1.getPrice());
         catalog.put(phoneClone, phoneClone.getPrice());
