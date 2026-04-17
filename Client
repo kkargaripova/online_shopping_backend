@@ -1,0 +1,27 @@
+public class Client extends Person implements financable {
+    private double wallet;
+
+    public Client(String name, int age, double wallet) {
+        super(name, age);
+        this.wallet = wallet;
+    }
+
+    @Override
+    public double checkBalance() {
+        return wallet;
+    }
+
+    @Override
+    public boolean hasEnoughMoney(double money) {
+        return wallet >= money;
+    }
+
+    @Override
+    public String getFinancialStatus() {
+        return "Клиент " + getName() + " имеет на счету: " + wallet + " руб.";
+    }
+
+    public void spend(double amount) {
+        this.wallet -= amount;
+    }
+}
