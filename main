@@ -1,0 +1,70 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+    public static void main(String[] args) {
+        Map<Product, Integer> catalog = new HashMap<>();
+
+        Map<String, String> attributes1 = new HashMap<>();
+        attributes1.put("brand", "Apple");
+        attributes1.put("color", "White");
+
+        PhysicalProduct phone17 = new PhysicalProduct(1, "Iphone 17", 100000, attributes1);
+        PhysicalProduct headphones1 = new PhysicalProduct(2, "Sony HeadPhones", 20000, new HashMap<>());
+        PhysicalProduct phoneClone = new PhysicalProduct(3, "Iphone 17", 100000, attributes1);
+        PhysicalProduct phoneOther = new PhysicalProduct(4, "Iphone 16", 70000, attributes1);
+
+        catalog.put(phone17, phone17.getPrice());
+        catalog.put(headphones1, headphones1.getPrice());
+        catalog.put(phoneClone, phoneClone.getPrice());
+
+        printCatalog(catalog);
+
+        System.out.println("Сравнение объектов через equals (по ID)");
+        System.out.println("phone17 равен New Iphone17? " + phone17.equals(phoneClone));
+        System.out.println("phone17 равен Iphone16? " + phone17.equals(phoneOther));
+
+        System.out.println("Проверка процесса оплаты");
+        System.out.println("Статус оплаты " + phone17.getTitle() + " до: " + phone17.isPaid());
+
+        double priceToPay = phone17.getFinalPrice();
+        phone17.pay(100000.0);
+        System.out.println("Статус оплаты после: " + phone17.isPaid());
+
+        System.out.println("Проверка работы класса Financable");
+        System.out.println("Статус: " + phone17.getFinancialStatus());
+        System.out.println("Баланс до покупки: " + phone17.checkBalance());
+
+        if (phone17.hasEnoughMoney(phone17.getFinalPrice())) {
+            phone17.pay(phone17.getFinalPrice());
+        }
+
+        System.out.println("Новый баланс: " + phone17.checkBalance());
+        System.out.println("Итоговый статус: " + phone17.getFinancialStatus());
+    }
+
+    private static void printCatalog(Map<Product, Integer> catalog) {
+        System.out.println("Каталог товаров");
+        System.out.printf("%-5s | %-20s | %-10s | %s%n", "ID", "Название", "Цена", "Атрибуты");
+
+        for (Map.Entry<Product, Integer> entry : catalog.entrySet()) {
+            Product product = entry.getKey();
+            System.out.printf("%-5s | %-20s | %-10d | %s%n",
+                    product.getId(),
+                    product.getTitle(),
+                    product.getPrice(),
+                    formatAttributes(product.getAttributes())
+            );
+        }
+        System.out.println("Всего уникальных продуктов: " + catalog.size());
+    }
+
+    private static String formatAttributes(Map<String, String> attributes) {
+        if (attributes == null || attributes.isEmpty()) return "Нет атрибутов";
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+            sb.append(String.format("[%s: %s] ", entry.getKey(), entry.getValue()));
+        }
+        return sb.toString().trim();
+    }
+}
